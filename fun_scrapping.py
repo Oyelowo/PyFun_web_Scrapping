@@ -2,7 +2,7 @@
 """
 Created on Thu Jan 25 03:39:32 2018
 
-@author: oyedayo
+@author: oyedayo Oyelowo
 """
 ######AUTOMATE THE BORING STUFFS FOR FUN#################
 ########SCRAPPING NEWS WEBSITE###################
@@ -13,10 +13,17 @@ import pandas as pd
 
 #get the url. 
 #I have decided to try YLE which is a news website in Finland"
-#I am curious to know how many times Trump has appeared in the news.
+#I am curious to know how many times name_of_interest has appeared in the news.
 
 #get the page for rss feeds.
 url='https://feeds.yle.fi/uutiset/v1/majorHeadlines/YLE_UUTISET.rss'
+
+#This is the name I will be exploring. With this script, you can get the 
+#number of times it has appeared in the news headlines in the rss feeds.
+#you can also get the pictures that were used and the title and descritpions of 
+#the news articles. 
+#TODO: Transform this script into a package.
+#name_of_interest='president'
 
 #the response
 respo = rq.get(url)
@@ -60,6 +67,7 @@ tr=Translator()
 # =============================================================================
 
 
+
 #The below is done to put the various attributes into a dataframe.
 news_items= pd.DataFrame()
 for i, item in enumerate(items):
@@ -71,41 +79,33 @@ for i, item in enumerate(items):
     news_items.loc[i, 'description_en']=(tr.translate(item.description.text)).text
     news_items.loc[i, 'image']=item.enclosure['url'] if item.enclosure is not None else ''
 
-# e.g: we can see how many times Trump appeared in the news
-trump_occur=len([r for i,r in news_items.iterrows() if 'Trump' in r.title])
-print("Trump's name appeared {0} times in the news publications".format(trump_occur))
+#name to be explored in the rss feeds of the url.
+name_of_interest='president'
+
+# e.g: we can see how many times name_of_interest appeared in the news
+name_of_interest_occur=len([rows for idx,rows in news_items.iterrows() if name_of_interest in rows.title])
+print("{0}'s name appeared {1} times in the news publications".format(name_of_interest, name_of_interest_occur))
+#here, it shows that name_of_interest name appeared a number of times. we can further check the content of the news and more.
+
 # =============================================================================
 #alternative
-# trump=[]
+# name_of_interest=[]
 # for idx, rows in news_items.iterrows():
-#     if 'Trump' in rows.title:
-#         trump.append(rows.title)
-#print("Trump's name appeared {0} times in the news publications".format(len(trump)))
-# =============================================================================
-
-#here, it shows that trump name appeared twice. we can further check the content of the news and more.
-
-# =============================================================================
-# #Online images can be gotten by using these two libraries
-# url2='https://images.cdn.yle.fi/image/upload//w_205,h_115,q_70/13-3-10039531.jpg'
-# #we can also see the kind of image
-# from PIL import Image as Img_pil
-# im = Img_pil.open(rq.get(url2, stream=True).raw)
-# 
-# from IPython.display import Image as Img_ip
-# Img_ip(url2)
+#     if 'name_of_interest' in rows.title:
+#         name_of_interest.append(rows.title)
+#print("{0}'s name appeared {1} times in the news publications".format(name_of_interest, len(name_of_interest)))
 # =============================================================================
 
 
 
-#####THE FULL TITLES AND DEESCRIPTIONS OF WHERE TOPIC ABOUT TRUMP APPEARED###############
+#####THE FULL TITLES AND DEESCRIPTIONS OF WHERE TOPIC ABOUT name_of_interest APPEARED###############
 for idx, rows in news_items.iterrows():
-    if 'Trump' in rows.title:
+    if name_of_interest in rows.title:
         print('Title: ', rows.title+'.\nDescription: ', rows.description, '\n'*2)
 
 ####IN ENGLISH
 for idx, rows in news_items.iterrows():
-    if 'Trump' in rows.title:
+    if name_of_interest in rows.title:
         print('Title: ', rows.title_en, '.\nDescription: ', rows.description_en, '\n'*2)
 
 
@@ -117,24 +117,24 @@ from IPython.display import Image as Img_ip
 
 #get all the images in a list
 #this is done by iterating over all rows in the dataframe, get the image column and use the Image(Img_ip)
-#function on the url of the image. conditional statement is further created to know if 'Trump' is i the title.
-trump_pics=[Img_ip(rows.image) for idx,rows in news_items.iterrows() if 'Trump' in rows.title]
+#function on the url of the image. conditional statement is further created to know if name_of_interest is i the title.
+name_of_interest_pics=[Img_ip(rows.image) for idx,rows in news_items.iterrows() if name_of_interest in rows.title]
 
 #so, how many of them do we have?
-print("There are {number} pictures used in all Trump's publications.".format(number=len(trump_pics)))
+print("There are {number} pictures used in all {name}'s publications.".format(number=len(name_of_interest_pics), name=name_of_interest))
 
 #now, let's see the pictures.
 #first picture
-trump_pics[0]
+name_of_interest_pics[0]
 
 #second picture
-trump_pics[1]
+name_of_interest_pics[1]
 
 # =============================================================================
-# #Alternative 1
+# #Alternative 
 # img=[]     
 # for idx, rows in news_items.iterrows():
-#     if 'Trump' in rows.title:
+#     if name_of_interest in rows.title:
 #         url_img=rows.image
 #         img.append(url_img)
 #         
@@ -144,8 +144,18 @@ trump_pics[1]
 # Img_ip(img[1])
 # =============================================================================
 
+
+
+
+
+
+
+
+
+######################
+#alternative to getting the items into a dataframe which was done earlier
 # =============================================================================
-# #alternative 2
+# #alternative 1
 # news_items= pd.DataFrame()
 # title=[];link=[];descr=[];image=[]
 # for item in items:
@@ -165,7 +175,7 @@ trump_pics[1]
         
 
 # =============================================================================
-# #alternative 3
+# #alternative 2
 # title=[];link=[];descr=[];image=[]
 #for i in range(len(items)):
 #    title.append(items[i].title.text)
