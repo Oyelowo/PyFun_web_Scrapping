@@ -46,7 +46,8 @@ len(items)
     
 #create empty list
 news_items=[]
-#get all items in the news
+
+#get all items in the rss feed
 ##This willbe achieved by iterating over all the items and inserting the 
 ##dictionaries into the empty list
 for item in items:
@@ -68,21 +69,26 @@ tr=Translator()
 #tr.translate(text='Robert Muellerin johtamassa tutkinnassa selvitetään, sekaantuiko')
 # =============================================================================
 
-
-
 #The below is done to put the various attributes into a dataframe.
 news_items= pd.DataFrame()
 for i, item in enumerate(items):
     print(i)
     news_items.loc[i, 'title']=item.title.text
-    news_items.loc[i, 'title_en']=(tr.translate(item.title.text)).text
+    #the english translation of the title
+#    news_items.loc[i, 'title_en']=(tr.translate(item.title.text)).text
     news_items.loc[i, 'link']=item.link.text
     news_items.loc[i, 'description']=item.description.text
-    news_items.loc[i, 'description_en']=(tr.translate(item.description.text)).text
+#    news_items.loc[i, 'description_en']=(tr.translate(item.description.text)).text
     news_items.loc[i, 'image']=item.enclosure['url'] if item.enclosure is not None else ''
+    content_xml=item.find('content:encoded').text
+    content=''.join(bs(content_xml, "lxml").findAll(text=True))
+    #    this  gets the body, removes the extra characters to leave plain text
+    news_items.loc[i, 'content']= content
+#    news_items.loc[i, 'body_en']= (tr.translate(content)).text
+
 
 #name to be explored in the rss feeds of the url.
-name_of_interest='Helsinki'
+name_of_interest='president'
 
 # e.g: we can see how many times name_of_interest appeared in the news
 name_of_interest_occur=len([rows for idx,rows in news_items.iterrows() if name_of_interest in rows.title])
@@ -108,13 +114,25 @@ for idx, rows in news_items.iterrows():
 ####IN ENGLISH
 for idx, rows in news_items.iterrows():
     if name_of_interest in rows.title:
-        print('Title: ', rows.title_en, '.\nDescription: ', rows.description_en, '\n'*2)
+        print('Title: ', tr.translate(rows.title).text, '.\nDescription: ', tr.translate(rows.description).text, '\n'*2)
+
+
+#####CONTENT ORIGINALLY IN FINNISH
+for idx, rows in news_items.iterrows():
+    if name_of_interest in rows.title:
+        print('Title: ', rows.title, '.\nCONTENT: \n', rows.content)
+
+
+
+#####THE CONTENT  TRANSLATED INTO ENLISH
+for idx, rows in news_items.iterrows():
+    if name_of_interest in rows.title:
+        print('Title: ', tr.translate(rows.title).text, '.\nCONTENT: \n', tr.translate(rows.content).text)
 
 
 
 ###########THE IMAGES USED IN THOSE PUBLICATIONS##########################
-#Either of these two libraries can be used but I chose to use both in the alternative
-from PIL import Image as Img_pil
+#Load library for viewing image online.
 from IPython.display import Image as Img_ip
 
 #get all the images in a list
@@ -127,7 +145,7 @@ print("There are {number} pictures used in all {name}'s publications.".format(nu
 
 #now, let's see the pictures.
 #first picture
-name_of_interest_pics[0]
+name_of_interest_pics[3]
     
 
 #second picture
@@ -135,6 +153,8 @@ name_of_interest_pics[0]
 
 # =============================================================================
 # #Alternative 
+#from PIL import Image as Img_pil
+#from IPython.display import Image as Img_ip
 # img=[]     
 # for idx, rows in news_items.iterrows():
 #     if name_of_interest in rows.title:
