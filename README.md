@@ -3,7 +3,7 @@ this script wass created to scrape rss feeds website, find the number of times a
 
 ## What PyFun_Web_Scrapping does:
 
-    **Scrape a website's rss feed of news websites for Information scraped include:**
+    Scrape a website's rss feed of news websites for Information scraped include:
 -   Title of Articles.
 -   Descriptions of the Articles.
 -   Content of the Articles.
@@ -12,7 +12,7 @@ this script wass created to scrape rss feeds website, find the number of times a
 -   Images used on the pages.
 -   Character count, word count and sentence count.
 
-**Search information about name of a person or thing, including:**
+   **Search information about name of a person or thing, including:**
 -   Number of times the name appeared in the feeds.
 -   Titles, Descriptions and contents in original language used in the article.
 -   A translation to English of the Titles, Descriptions and Contents of the articles where the name has appeared,
