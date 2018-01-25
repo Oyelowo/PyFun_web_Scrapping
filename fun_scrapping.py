@@ -22,8 +22,10 @@ url='https://feeds.yle.fi/uutiset/v1/majorHeadlines/YLE_UUTISET.rss'
 #number of times it has appeared in the news headlines in the rss feeds.
 #you can also get the pictures that were used and the title and descritpions of 
 #the news articles. 
+# e.g: name_of_interest='Trump'
+
 #TODO: Transform this script into a package.
-#name_of_interest='president'
+
 
 #the response
 respo = rq.get(url)
@@ -80,7 +82,7 @@ for i, item in enumerate(items):
     news_items.loc[i, 'image']=item.enclosure['url'] if item.enclosure is not None else ''
 
 #name to be explored in the rss feeds of the url.
-name_of_interest='president'
+name_of_interest='Helsinki'
 
 # e.g: we can see how many times name_of_interest appeared in the news
 name_of_interest_occur=len([rows for idx,rows in news_items.iterrows() if name_of_interest in rows.title])
@@ -126,9 +128,10 @@ print("There are {number} pictures used in all {name}'s publications.".format(nu
 #now, let's see the pictures.
 #first picture
 name_of_interest_pics[0]
+    
 
 #second picture
-name_of_interest_pics[1]
+#name_of_interest_pics[1]
 
 # =============================================================================
 # #Alternative 
