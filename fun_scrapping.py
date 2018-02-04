@@ -130,7 +130,7 @@ print("There are {number} pictures used in all {name}'s publications.".format(nu
 
 #now, let's see the pictures.
 #first picture
-name_of_interest_pics[1]
+name_of_interest_pics[0]
     
 
 #second picture
